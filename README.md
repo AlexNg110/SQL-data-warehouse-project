@@ -1,7 +1,7 @@
 # DATA WAREHOUSE AND ANALYTICS PROJECT
 Credit: Data with Baara
 
-## 1. Project requirements
+## 1. Project overview
 
 ### 1.1. Build a complete data warehouse (Data Engineering)
 #### Objective
@@ -19,3 +19,8 @@ Develop SQL-based analytics to deliver detailed insights into:
 - **Customer Behavior**
 - **Product Performance**
 - **Sales Trends**
+
+## 2. Data architecture
+The data architecture for this project follows Medallion Architecture **Bronze**, **Silver**, and **Gold** layers:
+<img width="1042" height="592" alt="DW-architecture" src="https://github.com/user-attachments/assets/1e442692-cb66-462a-abdf-ac531b5b498e" />
+
