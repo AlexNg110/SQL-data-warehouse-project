@@ -2,8 +2,10 @@
 
 */
 
+/*----------------------------------------
+Data Quality Check
+----------------------------------------*/
 -- Check for NULLs or duplicates in PK
-
 SELECT
 cst_id,
 COUNT (*)
@@ -11,7 +13,14 @@ FROM bronze.crm_cust_info
 GROUP BY cst_id
 HAVING COUNT(*) >1 OR cst_id IS NULL
 
+-- Check for unwanted spaces in string values
 
+
+/*----------------------------------------
+End of Quality Check
+----------------------------------------*/
+
+-- Main 
 SELECT
 *
 FROM (
