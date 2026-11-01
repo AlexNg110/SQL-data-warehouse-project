@@ -6,7 +6,7 @@ Script from data quality check for bronze layer can be used to verify the qualit
 
 
 /*----------------------------------------
-Data Quality Check (example crm_cust_info, crm_prd_info)
+Data Quality Check (example crm_cust_info, crm_prd_info, sales_details)
 ----------------------------------------*/
 -- Check for NULLs or duplicates in PK
 SELECT
@@ -36,6 +36,33 @@ WHERE prd_cost < 0 OR prd_cost IS NULL
 SELECT *
 FROM bronze.crm_prd_info
 WHERE prd_end_dt < prd_start_dt
+
+-- Check if the keys in sales_details can be connected to cust_info and prd_info
+SELECT
+    sls_ord_num,
+    sls_prd_key,
+    sls_cust_id,
+    sls_order_dt,
+    sls_ship_dt,
+    sls_due_dt,
+    sls_sales,
+    sls_quantity,
+    sls_price
+FROM bronze.crm_sales_details
+WHERE sls_cust_id NOT IN (SELECT cst_id FROM silver.crm_cust_info)
+
+-- Check for invalid dates
+SELECT
+NULLIF(sls_order_dt, 0) sls_order_dt
+FROM bronze.crm_sales_details
+WHERE sls_order_dt <= 0 OR LEN(sls_order_dt) != 8
+
+-- Check for invalid date orders
+SELECT *
+FROM bronze.crm_sales_details
+WHERE sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt
+
+-- Check for data consistency between sales, quantity and price
 
 /*----------------------------------------
 End of Quality Check
