@@ -282,6 +282,12 @@ BEGIN
 		SET @end_time = GETDATE();
 		PRINT '>> Load duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + 'seconds';
 		PRINT '------------------------------------';
+
+		SET @batch_end_time = GETDATE();
+		PRINT '=============================================';
+		PRINT 'Loading Silver Layer is Completed';
+		PRINT '>> Load duration: ' + CAST(DATEDIFF(second, @batch_start_time, @batch_end_time) AS NVARCHAR) + 'seconds';
+		PRINT '=============================================';
 	END TRY
 	BEGIN CATCH
 		PRINT '=============================================';
