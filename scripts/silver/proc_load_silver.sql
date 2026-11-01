@@ -6,7 +6,7 @@ Script from data quality check for bronze layer can be used to verify the qualit
 
 
 /*----------------------------------------
-Data Quality Check (example crm_cust_info, crm_prd_info, sales_details)
+Data Quality Check (example from crm_cust_info, crm_prd_info, sales_details, erp_cust_az12)
 ----------------------------------------*/
 -- Check for NULLs or duplicates in PK
 SELECT
@@ -57,12 +57,35 @@ NULLIF(sls_order_dt, 0) sls_order_dt
 FROM bronze.crm_sales_details
 WHERE sls_order_dt <= 0 OR LEN(sls_order_dt) != 8
 
+SELECT *
+FROM bronze.crm_sales_details
+WHERE sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt
+
 -- Check for invalid date orders
 SELECT *
 FROM bronze.crm_sales_details
 WHERE sls_order_dt > sls_ship_dt OR sls_order_dt > sls_due_dt
 
 -- Check for data consistency between sales, quantity and price
+SELECT DISTINCT
+sls_sales,
+sls_quantity,
+sls_price
+FROM silver.crm_sales_details
+WHERE sls_sales != sls_quantity * sls_price
+OR sls_sales IS NULL OR sls_quantity IS NULL OR sls_price IS NULL
+OR sls_sales <= 0 OR sls_quantity <= 0 OR sls_price <= 0
+ORDER BY sls_sales, sls_quantity, sls_price
+/* Rules for transformatin later
+If sales is negative, zero or null, calculate it from quantity and price
+If price is zero or null, calculate it from sales and quantity
+If price is negative, convert it to a positive value*/
+
+-- Check for out-of-range dates
+SELECT DISTINCT
+bdate
+FROM bronze.erp_cust_az12
+WHERE bdate < '1926-01-01' OR bdate > GETDATE()
 
 /*----------------------------------------
 End of Quality Check
@@ -116,18 +139,18 @@ End of Quality Check
 	)
 	
 	SELECT
-	prd_id,
-	REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS cat_id, -- Extract category ID
-	SUBSTRING(prd_key, 7, LEN(prd_key)) AS prd_key,        -- Extract product key
-	prd_nm,
-	ISNULL(prd_cost, 0) AS prd_cost,
-	CASE UPPER(TRIM(prd_line))
-		 WHEN 'M' THEN 'Mountain'
-		 WHEN 'R' THEN 'Road'
-		 WHEN 'S' THEN 'Other Sales'
-		 WHEN 'T' THEN 'Touring'
-		 ELSE 'n/a'
-	END prd_line,
-	CAST(prd_start_dt AS DATE) AS prd_start_dt,
-	CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) -1 AS DATE) AS prd_end_dt  -- Access values from the next row within a window
+		prd_id,
+		REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS cat_id, -- Extract category ID
+		SUBSTRING(prd_key, 7, LEN(prd_key)) AS prd_key,        -- Extract product key
+		prd_nm,
+		ISNULL(prd_cost, 0) AS prd_cost,
+		CASE UPPER(TRIM(prd_line))
+			 WHEN 'M' THEN 'Mountain'
+			 WHEN 'R' THEN 'Road'
+			 WHEN 'S' THEN 'Other Sales'
+			 WHEN 'T' THEN 'Touring'
+			 ELSE 'n/a'
+		END prd_line,
+		CAST(prd_start_dt AS DATE) AS prd_start_dt,
+		CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) -1 AS DATE) AS prd_end_dt  -- Access values from the next row within a window
 	FROM bronze.crm_prd_info
