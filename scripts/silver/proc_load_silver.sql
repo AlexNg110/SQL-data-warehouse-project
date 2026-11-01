@@ -1,12 +1,15 @@
 /*
+========================================================================
+Stored procedure: Load Silver Layer (Bronze -> Silver)
+========================================================================
+Purpose:
 
-
-Script from data quality check for bronze layer can be used to verify the quality of data in the silver layer
 */
 
 
 /*----------------------------------------
 Data Quality Check (example from crm_cust_info, crm_prd_info, sales_details, erp_cust_az12)
+[Script from data quality check for bronze layer can be used to verify the quality of data in the silver layer]
 ----------------------------------------*/
 -- Check for NULLs or duplicates in PK
 SELECT
