@@ -3,9 +3,11 @@
 Stored procedure: Load Silver Layer (Bronze -> Silver)
 ========================================================================
 Purpose:
+	Performs the ETL (Extract, Transform, Load) process to populate the 'silver' schema tables from the 'bronze' schema.
+	Data quality check: step before transformations
 
+Usage: EXEC.silver.load_silver;
 */
-
 
 /*----------------------------------------
 Data Quality Check (example from crm_cust_info, crm_prd_info, sales_details, erp_cust_az12)
