@@ -3,7 +3,7 @@ Credit: Data with Baara
 
 ## 1. Project overview
 
-### 1.1. Build a complete data warehouse (Data Engineering)
+### Build a complete data warehouse (Data Engineering)
 #### Objective
 Develop a data warehouse with SQL server, including ETL process and data modelling, enabling analytical reporting and informed decision-making.
 #### Specifications
@@ -13,12 +13,6 @@ Develop a data warehouse with SQL server, including ETL process and data modelli
 - **Scope**: Focus on the latest dataset only; historization of data is not required.
 - **Documentation**: Provide clear documentation of the data model to support both business stakeholders and analytics teams.
 
-### 1.2. BI: Analytics & Reporting (Data Analysis)
-#### Objective
-Develop SQL-based analytics to deliver detailed insights into:
-- **Customer Behavior**
-- **Product Performance**
-- **Sales Trends**
 
 ## 2. Data architecture
 The data architecture for this project follows Medallion Architecture **Bronze**, **Silver**, and **Gold** layers:
