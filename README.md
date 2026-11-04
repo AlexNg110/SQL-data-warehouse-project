@@ -1,4 +1,4 @@
-# DATA WAREHOUSE AND ANALYTICS PROJECT
+# DATA WAREHOUSE PROJECT
 Credit: Data with Baara
 
 ## 1. Project overview
